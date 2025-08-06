@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lzy.codestudybackend.common.ErrorCode;
 import com.lzy.codestudybackend.constant.CommonConstant;
+import com.lzy.codestudybackend.constant.RedisConstant;
 import com.lzy.codestudybackend.exception.BusinessException;
 import com.lzy.codestudybackend.mapper.UserMapper;
 import com.lzy.codestudybackend.model.dto.user.UserQueryRequest;
@@ -16,14 +17,21 @@ import com.lzy.codestudybackend.model.vo.LoginUserVO;
 import com.lzy.codestudybackend.model.vo.UserVO;
 import com.lzy.codestudybackend.service.UserService;
 import com.lzy.codestudybackend.utils.SqlUtils;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 import org.apache.commons.lang3.StringUtils;
+import org.redisson.api.RBitSet;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
@@ -40,7 +48,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     /**
      * 盐值，混淆密码
      */
-    public static final String SALT = "yupi";
+    public static final String SALT = "lzy";
+
+    @Resource
+    private RedissonClient redissonClient;
+    @Resource
+    private RedisTemplate redisTemplate;
 
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword) {
@@ -269,4 +282,58 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 sortField);
         return queryWrapper;
     }
+
+
+    /**
+     * 添加用户签到记录
+     * @param userId 用户 id
+     * @return 当前用户是否已签到成功
+     */
+    @Override
+    public boolean addUserSignIn(long userId) {
+        LocalDate date = LocalDate.now();
+        String key = RedisConstant.getUserSignInRedisKey(date.getYear(), userId);
+        // 获取 Redis 的 BitMap
+        RBitSet signInBitSet = redissonClient.getBitSet(key);
+        // 获取当前日期是一年中的第几天，作为偏移量（从 1 开始计数）
+        int offset = date.getDayOfYear();
+        // 查询当天有没有签到
+        if (!signInBitSet.get(offset)) {
+            // 如果当前未签到，则设置
+            signInBitSet.set(offset, true);
+        }
+        // 当天已签到
+        return true;
+    }
+
+    /**
+     * 获取用户某个年份的签到记录
+     *
+     * @param userId 用户 id
+     * @param year   年份（为空表示当前年份）
+     * @return 签到记录映射
+     */
+    @Override
+    public List<Integer> getUserSignInRecord(long userId, Integer year) {
+        if (year == null) {
+            LocalDate date = LocalDate.now();
+            year = date.getYear();
+        }
+        String key = RedisConstant.getUserSignInRedisKey(year, userId);
+        // 获取 Redis 的 BitMap
+        RBitSet signInBitSet = redissonClient.getBitSet(key);
+        // 加载 BitSet 到内存中，避免后续读取时发送多次请求
+        BitSet bitSet = signInBitSet.asBitSet();
+        // 统计签到的日期
+        List<Integer> dayList = new ArrayList<>();
+        // 从索引 0 开始查找下一个被设置为 1 的位
+        int index = bitSet.nextSetBit(0);
+        while (index >= 0) {
+            dayList.add(index);
+            // 继续查找下一个被设置为 1 的位
+            index = bitSet.nextSetBit(index + 1);
+        }
+        return dayList;
+    }
+
 }
