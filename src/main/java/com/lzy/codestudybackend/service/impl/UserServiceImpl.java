@@ -19,9 +19,7 @@ import com.lzy.codestudybackend.service.UserService;
 import com.lzy.codestudybackend.utils.SqlUtils;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -302,6 +300,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             // 如果当前未签到，则设置
             signInBitSet.set(offset, true);
         }
+        // 更新排行榜数据
+        updateSignInRank(userId, date);
         // 当天已签到
         return true;
     }
@@ -334,6 +334,162 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             index = bitSet.nextSetBit(index + 1);
         }
         return dayList;
+    }
+
+    /**
+     * 更新签到排行榜 - 新增方法
+     * @param userId 用户ID
+     * @param date 签到日期
+     */
+    private void updateSignInRank(long userId, LocalDate date) {
+        // 1. 更新总排行榜
+        updateTotalRank(userId);
+
+        // 2. 更新年排行榜
+        updateYearRank(userId, date.getYear());
+
+        // 3. 更新月排行榜
+        updateMonthRank(userId, date.getYear(), date.getMonthValue());
+    }
+
+    /**
+     * 更新总排行榜
+     * @param userId 用户ID
+     */
+    private void updateTotalRank(long userId) {
+        String totalRankKey = RedisConstant.getUserSignInTotalRankKey();
+
+        // 检查用户是否已在排行榜中
+        Double currentScore = redisTemplate.opsForZSet().score(totalRankKey, userId);
+
+        if (currentScore == null) {
+            // 用户不在排行榜中，第一次签到，设置分数为1
+            redisTemplate.opsForZSet().add(totalRankKey, userId, 1);
+            log.info("Initialized total rank for user {}, score: 1", userId);
+        } else {
+            // 用户已在排行榜中，分数+1
+            int newScore = currentScore.intValue() + 1;
+            redisTemplate.opsForZSet().add(totalRankKey, userId, newScore);
+            log.info("Updated total rank for user {}, new score: {}", userId, newScore);
+        }
+    }
+
+    /**
+     * 更新年排行榜
+     * @param userId 用户ID
+     * @param year 年份
+     */
+    private void updateYearRank(long userId, int year) {
+        String yearRankKey = RedisConstant.getUserSignInRankKey(year);
+
+        // 检查用户是否已在年排行榜中
+        Double currentScore = redisTemplate.opsForZSet().score(yearRankKey, userId);
+
+        if (currentScore == null) {
+            // 用户不在年排行榜中，今年第一次签到，设置分数为1
+            redisTemplate.opsForZSet().add(yearRankKey, userId, 1);
+            log.info("Initialized year rank for user {} in year {}, score: 1", userId, year);
+        } else {
+            // 用户已在年排行榜中，分数+1
+            int newScore = currentScore.intValue() + 1;
+            redisTemplate.opsForZSet().add(yearRankKey, userId, newScore);
+            log.info("Updated year rank for user {} in year {}, new score: {}", userId, year, newScore);
+        }
+    }
+
+    /**
+     * 更新月排行榜
+     * @param userId 用户ID
+     * @param year 年份
+     * @param month 月份
+     */
+    private void updateMonthRank(long userId, int year, int month) {
+        String monthRankKey = RedisConstant.getUserSignInMonthlyRankKey(year, month);
+
+        // 检查用户是否已在月排行榜中
+        Double currentScore = redisTemplate.opsForZSet().score(monthRankKey, userId);
+
+        if (currentScore == null) {
+            // 用户不在月排行榜中，本月第一次签到，设置分数为1
+            redisTemplate.opsForZSet().add(monthRankKey, userId, 1);
+            log.info("Initialized month rank for user {} in {}-{}, score: 1", userId, year, month);
+        } else {
+            // 用户已在月排行榜中，分数+1
+            int newScore = currentScore.intValue() + 1;
+            redisTemplate.opsForZSet().add(monthRankKey, userId, newScore);
+            log.info("Updated month rank for user {} in {}-{}, new score: {}", userId, year, month, newScore);
+        }
+    }
+
+
+    /**
+     * 获取用户签到排行榜
+     * @param limit 数量
+     * @param year 年份
+     * @param month 月份
+     * @return 用户信息列表
+     */
+    @Override
+    public List<UserVO> getUserSignInRank(Integer limit, Integer year,Integer month)
+    {
+        if (limit == null) {
+            limit = 10;
+        }
+
+        String rankKey;
+        if (year == null) {
+            // 总排行榜
+            rankKey = RedisConstant.getUserSignInTotalRankKey();
+        } else if (month == null) {
+            // 年度排行榜
+            rankKey = RedisConstant.getUserSignInRankKey(year);
+        } else {
+            // 月度排行榜
+            rankKey = RedisConstant.getUserSignInMonthlyRankKey(year, month);
+        }
+
+        // 从Redis获取排行榜
+        Set<Object> rankSet = redisTemplate.opsForZSet().reverseRange(rankKey, 0, limit - 1);
+
+        if (rankSet == null || rankSet.isEmpty()) {
+            // Redis中没有数据，返回空列表
+            // 注意：在实际应用中，可能需要考虑初始化排行榜的逻辑
+            log.warn("No rank data found in Redis for key: {}", rankKey);
+            return new ArrayList<>();
+        }
+
+        // 获取所有用户ID列表
+        List<Long> userIds = rankSet.stream()
+                .map(id -> Long.parseLong(id.toString()))
+                .collect(Collectors.toList());
+
+        // 直接从数据库批量查询用户信息
+        List<User> userList = this.listByIds(userIds);
+
+        // 构建用户ID到UserVO的映射
+        Map<Long, UserVO> userMap = userList.stream()
+                .collect(Collectors.toMap(
+                        User::getId,
+                        this::getUserVO,
+                        (existing, replacement) -> existing
+                ));
+
+        // 构建排行榜结果
+        return rankSet.stream()
+                .map(id -> {
+                    Long userId = Long.parseLong(id.toString());
+                    UserVO userVO = userMap.get(userId);
+
+                    if (userVO != null) {
+                        // 设置签到数
+                        Double score = redisTemplate.opsForZSet().score(rankKey, id);
+                        userVO.setSignInCount(score != null ? score.intValue() : 0);
+                    }
+
+                    return userVO;
+                })
+                .filter(Objects::nonNull) // 过滤掉null值
+                .collect(Collectors.toList());
     }
 
 }

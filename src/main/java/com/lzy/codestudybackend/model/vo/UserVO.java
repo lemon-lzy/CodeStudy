@@ -42,6 +42,15 @@ public class UserVO implements Serializable {
      * 创建时间
      */
     private Date createTime;
+    /**
+     * 签到数
+     */
+    private Integer signInCount;
+
+    /**
+     * 通过题目数量
+     */
+    private Integer questionPassCount;
 
     private static final long serialVersionUID = 1L;
 }
