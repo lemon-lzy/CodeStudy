@@ -19,7 +19,7 @@ spring:
   # todo 需替换配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/code_study
+    url: jdbc:mysql://localhost:3306/code_study?serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=True
     username: root
     password: 293928
   # Redis 配置
@@ -39,10 +39,10 @@ spring:
       shutdown-timeout: 100ms
   # Elasticsearch 配置
   # todo 需替换配置，然后取消注释
-#  elasticsearch:
-#    uris: http://localhost:9200
-#    username: root
-#    password: 123456
+  elasticsearch:
+    connection-timeout: 5000
+    uris: localhost:9200
+    socket-timeout: 60000
   # 文件上传
   servlet:
     multipart:

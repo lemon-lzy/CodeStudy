@@ -242,4 +242,18 @@ public class QuestionController {
     }
 
     // endregion
+
+    @PostMapping("/search/page/vo")
+    public BaseResponse<Page<QuestionVO>> searchQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
+                                                                 HttpServletRequest request) {
+        long size = questionQueryRequest.getPageSize();
+        // 限制爬虫
+        ThrowUtils.throwIf(size > 200, ErrorCode.PARAMS_ERROR);
+        // todo 取消注释开启 ES（须先配置 ES）
+        // 查询 ES
+        // Page<Question> questionPage = questionService.searchFromEs(questionQueryRequest);
+        // 查询数据库（作为没有 ES 的降级方案）
+        Page<Question> questionPage = questionService.listQuestionByPage(questionQueryRequest);
+        return ResultUtils.success(questionService.getQuestionVOPage(questionPage, request));
+    }
 }
