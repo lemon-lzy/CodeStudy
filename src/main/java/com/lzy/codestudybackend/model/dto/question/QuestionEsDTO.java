@@ -3,7 +3,7 @@ package com.lzy.codestudybackend.model.dto.question;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import com.lzy.codestudybackend.model.entity.Question;
+import com.lzy.codestudybackend.model.entity.question.Question;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.annotation.Id;

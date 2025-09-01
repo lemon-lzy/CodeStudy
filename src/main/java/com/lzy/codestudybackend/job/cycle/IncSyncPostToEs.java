@@ -1,9 +1,9 @@
 package com.lzy.codestudybackend.job.cycle;
 
 import com.lzy.codestudybackend.esdao.PostEsDao;
-import com.lzy.codestudybackend.mapper.PostMapper;
+import com.lzy.codestudybackend.mapper.post.PostMapper;
 import com.lzy.codestudybackend.model.dto.post.PostEsDTO;
-import com.lzy.codestudybackend.model.entity.Post;
+import com.lzy.codestudybackend.model.entity.post.Post;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;

@@ -2,8 +2,8 @@ package com.lzy.codestudybackend.job.once;
 
 import com.lzy.codestudybackend.esdao.PostEsDao;
 import com.lzy.codestudybackend.model.dto.post.PostEsDTO;
-import com.lzy.codestudybackend.model.entity.Post;
-import com.lzy.codestudybackend.service.PostService;
+import com.lzy.codestudybackend.model.entity.post.Post;
+import com.lzy.codestudybackend.service.post.PostService;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;

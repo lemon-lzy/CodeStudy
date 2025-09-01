@@ -1,8 +1,8 @@
 package com.lzy.codestudybackend.model.vo;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.lzy.codestudybackend.model.entity.Question;
-import com.lzy.codestudybackend.model.entity.QuestionBank;
+import com.lzy.codestudybackend.model.entity.question.Question;
+import com.lzy.codestudybackend.model.entity.question.QuestionBank;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 

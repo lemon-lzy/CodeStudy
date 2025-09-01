@@ -2,9 +2,9 @@ package com.lzy.codestudybackend.job.cycle;
 
 import cn.hutool.core.collection.CollUtil;
 import com.lzy.codestudybackend.esdao.QuestionEsDao;
-import com.lzy.codestudybackend.mapper.QuestionMapper;
+import com.lzy.codestudybackend.mapper.question.QuestionMapper;
 import com.lzy.codestudybackend.model.dto.question.QuestionEsDTO;
-import com.lzy.codestudybackend.model.entity.Question;
+import com.lzy.codestudybackend.model.entity.question.Question;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 

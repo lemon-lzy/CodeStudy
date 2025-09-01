@@ -2,7 +2,7 @@ package com.lzy.codestudybackend.model.dto.post;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONUtil;
-import com.lzy.codestudybackend.model.entity.Post;
+import com.lzy.codestudybackend.model.entity.post.Post;
 import lombok.Data;
 
 import org.apache.commons.lang3.StringUtils;

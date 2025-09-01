@@ -1,7 +1,7 @@
 package com.lzy.codestudybackend.model.vo;
 
 import cn.hutool.json.JSONUtil;
-import com.lzy.codestudybackend.model.entity.Question;
+import com.lzy.codestudybackend.model.entity.question.Question;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 

@@ -3,8 +3,8 @@ package com.lzy.codestudybackend.job.once;
 import cn.hutool.core.collection.CollUtil;
 import com.lzy.codestudybackend.esdao.QuestionEsDao;
 import com.lzy.codestudybackend.model.dto.question.QuestionEsDTO;
-import com.lzy.codestudybackend.model.entity.Question;
-import com.lzy.codestudybackend.service.QuestionService;
+import com.lzy.codestudybackend.model.entity.question.Question;
+import com.lzy.codestudybackend.service.question.QuestionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 

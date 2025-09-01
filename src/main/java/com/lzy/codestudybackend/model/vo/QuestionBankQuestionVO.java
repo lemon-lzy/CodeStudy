@@ -1,6 +1,6 @@
 package com.lzy.codestudybackend.model.vo;
 
-import com.lzy.codestudybackend.model.entity.QuestionBankQuestion;
+import com.lzy.codestudybackend.model.entity.question.QuestionBankQuestion;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 

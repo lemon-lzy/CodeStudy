@@ -1,7 +1,7 @@
 package com.lzy.codestudybackend.model.vo;
 
 import cn.hutool.json.JSONUtil;
-import com.lzy.codestudybackend.model.entity.Post;
+import com.lzy.codestudybackend.model.entity.post.Post;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
