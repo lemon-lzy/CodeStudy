@@ -106,3 +106,10 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - com.lzy.codestudybackend.controller
+# AI 大模型接入（目前是火山引擎 DeepSeek）
+ai:
+  apiKey: 3d084198-12f2-4e46-89c6-cccc048095f7
+
+#代码沙箱配置
+codesandbox:
+  type: ai

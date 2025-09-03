@@ -1,5 +1,5 @@
 package com.lzy.codestudybackend.model.dto.questionCode;
-import com.cool.pandora.common.PageRequest;
+import com.lzy.codestudybackend.common.PageRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
