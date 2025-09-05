@@ -1,26 +1,25 @@
-package com.lzy.codestudybackend.judge.strategy;
+package com.lzy.codestudybackend.judge;
 
 import cn.hutool.json.JSONUtil;
-import com.alibaba.fastjson.JSON;
-import com.cool.pandora.common.ErrorCode;
-import com.cool.pandora.exception.BusinessException;
-import com.cool.pandora.exception.ThrowUtils;
-import com.cool.pandora.judge.codesandbox.CodeSandBoxProxy;
-import com.cool.pandora.judge.codesandbox.CodeSandbox;
-import com.cool.pandora.judge.codesandbox.CodeSandboxFactory;
-import com.cool.pandora.judge.codesandbox.model.ExecuteCodeRequest;
-import com.cool.pandora.judge.codesandbox.model.ExecuteCodeResponse;
-import com.cool.pandora.judge.codesandbox.model.JudgeInfo;
-import com.cool.pandora.judge.strategy.JudgeContext;
-import com.cool.pandora.model.dto.questionCode.JudgeCase;
-import com.cool.pandora.model.dto.questionSubmit.QuestionSubmitAddRequest;
-import com.cool.pandora.model.entity.question.QuestionCode;
-import com.cool.pandora.model.entity.question.QuestionSubmit;
-import com.cool.pandora.model.enums.QuestionSubmitStatusEnum;
-import com.cool.pandora.service.question.QuestionCodeService;
-import com.cool.pandora.service.question.QuestionSubmitService;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.lzy.codestudybackend.common.ErrorCode;
+import com.lzy.codestudybackend.exception.BusinessException;
+import com.lzy.codestudybackend.exception.ThrowUtils;
+import com.lzy.codestudybackend.judge.codasandbox.CodeSandBoxProxy;
+import com.lzy.codestudybackend.judge.codasandbox.CodeSandbox;
+import com.lzy.codestudybackend.judge.codasandbox.CodeSandboxFactory;
+import com.lzy.codestudybackend.judge.codasandbox.model.ExecuteCodeRequest;
+import com.lzy.codestudybackend.judge.codasandbox.model.ExecuteCodeResponse;
+import com.lzy.codestudybackend.judge.codasandbox.model.JudgeInfo;
+import com.lzy.codestudybackend.judge.strategy.JudgeContext;
+import com.lzy.codestudybackend.model.dto.questionCode.JudgeCase;
+import com.lzy.codestudybackend.model.dto.questionSubmit.QuestionSubmitAddRequest;
+import com.lzy.codestudybackend.model.entity.question.QuestionCode;
+import com.lzy.codestudybackend.model.entity.question.QuestionSubmit;
+import com.lzy.codestudybackend.model.enums.QuestionSubmitStatusEnum;
+import com.lzy.codestudybackend.service.question.QuestionCodeService;
+import com.lzy.codestudybackend.service.question.QuestionSubmitService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -51,7 +50,7 @@ public class JudgeServiceImpl implements JudgeService {
     public QuestionSubmit doJudge(long questionSubmitId, QuestionSubmitAddRequest questionSubmitAddRequest) {
         // 1、传入题目的提交 id，获取到对应的题目、提交信息（包含代码、编程语言等）
         QuestionSubmit questionSubmit = questionSubmitService.getById(questionSubmitId);
-        ThrowUtils.throwIf(questionSubmit == null,ErrorCode.NOT_FOUND_ERROR, "提交信息不存在");
+        ThrowUtils.throwIf(questionSubmit == null, ErrorCode.NOT_FOUND_ERROR, "提交信息不存在");
 
         // 通过提交的信息中的题目id 获取到题目的全部信息
         Long questionId = questionSubmit.getQuestionId();
@@ -80,8 +79,7 @@ public class JudgeServiceImpl implements JudgeService {
         if (StringUtils.isNotBlank(questionSubmitAddRequest.getInputList())) {
             judgeCaseStr = questionSubmitAddRequest.getInputList();
         }
-        List<JudgeCase> judgeCasesList = JSON.parseArray(judgeCaseStr, JudgeCase.class);
-        // List<JudgeCase> judgeCasesList = JSONUtil.toList(judgeCaseStr, JudgeCase.class);
+         List<JudgeCase> judgeCasesList = JSONUtil.toList(judgeCaseStr, JudgeCase.class);
         // 通过Lambda表达式获取到每个题目的输入用例
         List<String> inputList = judgeCasesList.stream().map(JudgeCase::getInput).collect(Collectors.toList());
         // 调用沙箱

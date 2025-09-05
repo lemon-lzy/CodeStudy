@@ -1,4 +1,4 @@
-package com.lzy.codestudybackend.judge.strategy;
+package com.lzy.codestudybackend.judge;
 import com.lzy.codestudybackend.model.dto.questionSubmit.QuestionSubmitAddRequest;
 import com.lzy.codestudybackend.model.entity.question.QuestionSubmit;
 

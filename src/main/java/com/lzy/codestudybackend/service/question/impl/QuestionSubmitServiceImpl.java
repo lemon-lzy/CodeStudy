@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lzy.codestudybackend.common.ErrorCode;
 import com.lzy.codestudybackend.constant.CommonConstant;
 import com.lzy.codestudybackend.exception.BusinessException;
-import com.lzy.codestudybackend.judge.strategy.JudgeService;
+import com.lzy.codestudybackend.judge.JudgeService;
 import com.lzy.codestudybackend.mapper.question.QuestionSubmitMapper;
 import com.lzy.codestudybackend.model.dto.questionSubmit.QuestionSubmitAddRequest;
 import com.lzy.codestudybackend.model.dto.questionSubmit.QuestionSubmitQueryRequest;

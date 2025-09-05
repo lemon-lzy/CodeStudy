@@ -1,11 +1,11 @@
-package com.lzy.codestudybackend.judge.strategy;
+package com.lzy.codestudybackend.judge;
 
-import com.cool.pandora.judge.codesandbox.model.JudgeInfo;
-import com.cool.pandora.judge.strategy.DefaultJudgeStrategy;
-import com.cool.pandora.judge.strategy.JavaLanguageJudgeStrategy;
-import com.cool.pandora.judge.strategy.JudgeContext;
-import com.cool.pandora.judge.strategy.JudgeStrategy;
-import com.cool.pandora.model.entity.question.QuestionSubmit;
+import com.lzy.codestudybackend.judge.codasandbox.model.JudgeInfo;
+import com.lzy.codestudybackend.judge.strategy.DefaultJudgeStrategy;
+import com.lzy.codestudybackend.judge.strategy.JavaLanguageJudgeStrategy;
+import com.lzy.codestudybackend.judge.strategy.JudgeContext;
+import com.lzy.codestudybackend.judge.strategy.JudgeStrategy;
+import com.lzy.codestudybackend.model.entity.question.QuestionSubmit;
 import org.springframework.stereotype.Service;
 
 /**

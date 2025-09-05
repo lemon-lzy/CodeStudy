@@ -84,7 +84,6 @@ public class AiManager {
     public String doChat(List<ChatMessage> messages, String model) {
         // 构造请求
         ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest.builder()
-//                .model("deepseek-v3-241226")
                 .model(model)
                 .messages(messages)
                 .build();
