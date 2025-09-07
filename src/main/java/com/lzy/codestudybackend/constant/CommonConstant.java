@@ -2,9 +2,7 @@ package com.lzy.codestudybackend.constant;
 
 /**
  * 通用常量
- *
- * @author lzy
- * 
+
  */
 public interface CommonConstant {
 
