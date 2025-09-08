@@ -1,21 +1,17 @@
-package com.lzy.codestudybackend.model.entity.post;
+package com.lzy.codestudybackend.model.entity.question;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 帖子点赞
-
+ * 题目评论
  */
-@TableName(value = "post_thumb")
+@TableName(value = "question_comment")
 @Data
-public class PostThumb implements Serializable {
+public class QuestionComment implements Serializable {
 
     /**
      * id
@@ -24,14 +20,19 @@ public class PostThumb implements Serializable {
     private Long id;
 
     /**
-     * 帖子 id
+     * 题目 id
      */
-    private Long postId;
+    private Long questionId;
 
     /**
      * 创建用户 id
      */
     private Long userId;
+
+    /**
+     * 评论内容
+     */
+    private String content;
 
     /**
      * 创建时间
@@ -42,6 +43,12 @@ public class PostThumb implements Serializable {
      * 更新时间
      */
     private Date updateTime;
+
+    /**
+     * 是否删除
+     */
+    @TableLogic
+    private Integer isDelete;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

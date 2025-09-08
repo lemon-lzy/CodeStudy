@@ -1,6 +1,7 @@
 package com.lzy.codestudybackend.service.post.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lzy.codestudybackend.common.ErrorCode;
 import com.lzy.codestudybackend.exception.BusinessException;
@@ -10,16 +11,15 @@ import com.lzy.codestudybackend.model.entity.post.PostThumb;
 import com.lzy.codestudybackend.model.entity.user.User;
 import com.lzy.codestudybackend.service.post.PostService;
 import com.lzy.codestudybackend.service.post.PostThumbService;
-import javax.annotation.Resource;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
+
 /**
  * 帖子点赞服务实现
- *
- * @author lzy
- * 
+
  */
 @Service
 public class PostThumbServiceImpl extends ServiceImpl<PostThumbMapper, PostThumb>

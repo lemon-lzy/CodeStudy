@@ -2,30 +2,29 @@ package com.lzy.codestudybackend.service.post;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.lzy.codestudybackend.model.entity.post.PostThumb;
+import com.lzy.codestudybackend.model.entity.post.CommentThumb;
 import com.lzy.codestudybackend.model.entity.user.User;
 
 /**
- * 帖子点赞服务
-
+ * 评论点赞服务
  */
-public interface PostThumbService extends IService<PostThumb> {
+public interface CommentThumbService extends IService<CommentThumb> {
 
     /**
      * 点赞
      *
-     * @param postId
+     * @param commentId
      * @param loginUser
      * @return
      */
-    int doPostThumb(long postId, User loginUser);
+    int doThumb(long commentId, User loginUser);
 
     /**
      * 帖子点赞（内部服务）
      *
      * @param userId
-     * @param postId
+     * @param commentId
      * @return
      */
-    int doPostThumbInner(long userId, long postId);
+    int doThumbInner(long userId, long commentId);
 }

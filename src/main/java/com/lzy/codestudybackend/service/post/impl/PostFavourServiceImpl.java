@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lzy.codestudybackend.common.ErrorCode;
 import com.lzy.codestudybackend.exception.BusinessException;
@@ -13,16 +14,15 @@ import com.lzy.codestudybackend.model.entity.post.PostFavour;
 import com.lzy.codestudybackend.model.entity.user.User;
 import com.lzy.codestudybackend.service.post.PostFavourService;
 import com.lzy.codestudybackend.service.post.PostService;
-import javax.annotation.Resource;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
+
 /**
  * 帖子收藏服务实现
- *
- * @author lzy
- * 
+
  */
 @Service
 public class PostFavourServiceImpl extends ServiceImpl<PostFavourMapper, PostFavour>

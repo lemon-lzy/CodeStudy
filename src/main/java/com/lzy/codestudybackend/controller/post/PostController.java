@@ -1,8 +1,9 @@
 package com.lzy.codestudybackend.controller.post;
 
+import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.lzy.codestudybackend.annotation.AuthCheck;
+
 import com.lzy.codestudybackend.common.BaseResponse;
 import com.lzy.codestudybackend.common.DeleteRequest;
 import com.lzy.codestudybackend.common.ErrorCode;
@@ -18,23 +19,19 @@ import com.lzy.codestudybackend.model.entity.post.Post;
 import com.lzy.codestudybackend.model.entity.user.User;
 import com.lzy.codestudybackend.model.vo.PostVO;
 import com.lzy.codestudybackend.service.post.PostService;
+import com.lzy.codestudybackend.service.post.PostViewsService;
 import com.lzy.codestudybackend.service.user.UserService;
-import java.util.List;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 帖子接口
- *
- * @author lzy
- * 
+
  */
 @RestController
 @RequestMapping("/post")
@@ -46,6 +43,9 @@ public class PostController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private PostViewsService postViewsService;
 
     // region 增删改查
 
@@ -110,7 +110,7 @@ public class PostController {
      * @return
      */
     @PostMapping("/update")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @SaCheckRole(UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updatePost(@RequestBody PostUpdateRequest postUpdateRequest) {
         if (postUpdateRequest == null || postUpdateRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -156,7 +156,7 @@ public class PostController {
      * @return
      */
     @PostMapping("/list/page")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @SaCheckRole(UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<Post>> listPostByPage(@RequestBody PostQueryRequest postQueryRequest) {
         long current = postQueryRequest.getCurrent();
         long size = postQueryRequest.getPageSize();
@@ -258,6 +258,32 @@ public class PostController {
         }
         boolean result = postService.updateById(post);
         return ResultUtils.success(result);
+    }
+
+    /**
+     * 增加题目浏览量
+     *
+     * @param postId 题目ID
+     * @return 是否成功
+     */
+    @PostMapping("/view/{postId}")
+    public BaseResponse<Boolean> addPostViews(@PathVariable("postId") Long postId) {
+        ThrowUtils.throwIf(postId == null || postId <= 0, ErrorCode.PARAMS_ERROR);
+        boolean result = postViewsService.addPostViews(postId);
+        return ResultUtils.success(result);
+    }
+
+    /**
+     * 获取题目浏览量
+     *
+     * @param postId 题目ID
+     * @return 浏览量
+     */
+    @GetMapping("/view/count/{postId}")
+    public BaseResponse<Long> getQuestionViews(@PathVariable("postId") Long postId) {
+        ThrowUtils.throwIf(postId == null || postId <= 0, ErrorCode.PARAMS_ERROR);
+        long viewCount = postViewsService.getPostViews(postId);
+        return ResultUtils.success(viewCount);
     }
 
 }

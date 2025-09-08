@@ -1,4 +1,4 @@
-package com.lzy.codestudybackend.model.entity.post;
+package com.lzy.codestudybackend.model.entity.question;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -10,12 +10,11 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 帖子点赞
-
+ * 题目收藏
  */
-@TableName(value = "post_thumb")
+@TableName(value = "question_favourite")
 @Data
-public class PostThumb implements Serializable {
+public class QuestionFavourite implements Serializable {
 
     /**
      * id
@@ -24,9 +23,9 @@ public class PostThumb implements Serializable {
     private Long id;
 
     /**
-     * 帖子 id
+     * 题目 id
      */
-    private Long postId;
+    private Long questionId;
 
     /**
      * 创建用户 id

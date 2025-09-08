@@ -8,19 +8,18 @@ import com.lzy.codestudybackend.model.dto.postthumb.PostThumbAddRequest;
 import com.lzy.codestudybackend.model.entity.user.User;
 import com.lzy.codestudybackend.service.post.PostThumbService;
 import com.lzy.codestudybackend.service.user.UserService;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 帖子点赞接口
- *
- * @author lzy
- * 
+
  */
 @RestController
 @RequestMapping("/post_thumb")
@@ -42,7 +41,7 @@ public class PostThumbController {
      */
     @PostMapping("/")
     public BaseResponse<Integer> doThumb(@RequestBody PostThumbAddRequest postThumbAddRequest,
-            HttpServletRequest request) {
+                                         HttpServletRequest request) {
         if (postThumbAddRequest == null || postThumbAddRequest.getPostId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }

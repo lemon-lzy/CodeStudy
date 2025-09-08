@@ -10,26 +10,25 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 帖子点赞
-
+ * 评论点赞实体
  */
-@TableName(value = "post_thumb")
+@TableName(value = "comment_thumb")
 @Data
-public class PostThumb implements Serializable {
+public class CommentThumb implements Serializable {
 
     /**
-     * id
+     * ID
      */
     @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
-     * 帖子 id
+     * 评论ID
      */
-    private Long postId;
+    private Long commentId;
 
     /**
-     * 创建用户 id
+     * 用户ID
      */
     private Long userId;
 

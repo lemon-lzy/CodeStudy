@@ -1,14 +1,13 @@
 package com.lzy.codestudybackend.model.dto.post;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.List;
-import lombok.Data;
 
 /**
  * 编辑请求
  *
- * @author lzy
- * 
  */
 @Data
 public class PostEditRequest implements Serializable {
