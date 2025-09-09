@@ -91,10 +91,10 @@ wx:
 # todo 需替换配置
 cos:
   client:
-    accessKey: xxx
-    secretKey: xxx
-    region: xxx
-    bucket: xxx
+    accessKey: AKIDnRr43owwkS3QYS8bppb9TYP2RcfaIo7B
+    secretKey: sXzDD0Zu0we8OQEpBi5HFzVnrndJuRmt
+    region: ap-guangzhou
+    bucket: lzy-1343059489
 # 接口文档配置
 knife4j:
   enable: true

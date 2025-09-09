@@ -1,7 +1,8 @@
 package com.lzy.codestudybackend.controller.user;
 
+import cn.dev33.satoken.annotation.SaCheckRole;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.lzy.codestudybackend.annotation.AuthCheck;
+
 import com.lzy.codestudybackend.common.BaseResponse;
 import com.lzy.codestudybackend.common.DeleteRequest;
 import com.lzy.codestudybackend.common.ErrorCode;
@@ -10,22 +11,11 @@ import com.lzy.codestudybackend.config.WxOpenConfig;
 import com.lzy.codestudybackend.constant.UserConstant;
 import com.lzy.codestudybackend.exception.BusinessException;
 import com.lzy.codestudybackend.exception.ThrowUtils;
-import com.lzy.codestudybackend.model.dto.user.UserAddRequest;
-import com.lzy.codestudybackend.model.dto.user.UserLoginRequest;
-import com.lzy.codestudybackend.model.dto.user.UserQueryRequest;
-import com.lzy.codestudybackend.model.dto.user.UserRegisterRequest;
-import com.lzy.codestudybackend.model.dto.user.UserUpdateMyRequest;
-import com.lzy.codestudybackend.model.dto.user.UserUpdateRequest;
+import com.lzy.codestudybackend.model.dto.user.*;
 import com.lzy.codestudybackend.model.entity.user.User;
 import com.lzy.codestudybackend.model.vo.LoginUserVO;
 import com.lzy.codestudybackend.model.vo.UserVO;
 import com.lzy.codestudybackend.service.user.UserService;
-
-import java.util.List;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 import me.chanjar.weixin.common.bean.oauth2.WxOAuth2AccessToken;
@@ -33,20 +23,19 @@ import me.chanjar.weixin.mp.api.WxMpService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 import static com.lzy.codestudybackend.service.user.impl.UserServiceImpl.SALT;
 
+
 /**
  * 用户接口
- *
- * @author lzy
- * 
+
  */
 @RestController
 @RequestMapping("/user")
@@ -108,7 +97,7 @@ public class UserController {
      */
     @GetMapping("/login/wx_open")
     public BaseResponse<LoginUserVO> userLoginByWxOpen(HttpServletRequest request, HttpServletResponse response,
-            @RequestParam("code") String code) {
+                                                       @RequestParam("code") String code) {
         WxOAuth2AccessToken accessToken;
         try {
             WxMpService wxService = wxOpenConfig.getWxMpService();
@@ -165,7 +154,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/add")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @SaCheckRole(UserConstant.ADMIN_ROLE)
     public BaseResponse<Long> addUser(@RequestBody UserAddRequest userAddRequest, HttpServletRequest request) {
         if (userAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -189,7 +178,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/delete")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @SaCheckRole(UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> deleteUser(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -206,14 +195,38 @@ public class UserController {
      * @return
      */
     @PostMapping("/update")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @SaCheckRole(UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest userUpdateRequest,
-            HttpServletRequest request) {
+                                            HttpServletRequest request) {
         if (userUpdateRequest == null || userUpdateRequest.getId() == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         User user = new User();
         BeanUtils.copyProperties(userUpdateRequest, user);
+        boolean result = userService.updateById(user);
+        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+        return ResultUtils.success(true);
+    }
+
+    /**
+     * 编辑用户信息（支持用户和管理员）
+     *
+     * @param userEditRequest 编辑请求（包含需要更新的字段）
+     * @param request HTTP 请求
+     * @return 是否成功
+     */
+    @PostMapping("/edit")
+    public BaseResponse<Boolean> editUser(@RequestBody UserEditRequest userEditRequest, HttpServletRequest request) {
+        if (userEditRequest == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        // 获取当前登录用户
+        User loginUser = userService.getLoginUser(request);
+        // 构建更新对象
+        User user = new User();
+        BeanUtils.copyProperties(userEditRequest, user);
+        // 如果是用户编辑自己，强制设置 ID 为当前用户 ID（防止越权修改）
+        user.setId(loginUser.getId());
         boolean result = userService.updateById(user);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(true);
@@ -227,7 +240,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/get")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @SaCheckRole(UserConstant.ADMIN_ROLE)
     public BaseResponse<User> getUserById(long id, HttpServletRequest request) {
         if (id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -259,9 +272,9 @@ public class UserController {
      * @return
      */
     @PostMapping("/list/page")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @SaCheckRole(UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<User>> listUserByPage(@RequestBody UserQueryRequest userQueryRequest,
-            HttpServletRequest request) {
+                                                   HttpServletRequest request) {
         long current = userQueryRequest.getCurrent();
         long size = userQueryRequest.getPageSize();
         Page<User> userPage = userService.page(new Page<>(current, size),
@@ -278,7 +291,7 @@ public class UserController {
      */
     @PostMapping("/list/page/vo")
     public BaseResponse<Page<UserVO>> listUserVOByPage(@RequestBody UserQueryRequest userQueryRequest,
-            HttpServletRequest request) {
+                                                       HttpServletRequest request) {
         if (userQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -305,7 +318,7 @@ public class UserController {
      */
     @PostMapping("/update/my")
     public BaseResponse<Boolean> updateMyUser(@RequestBody UserUpdateMyRequest userUpdateMyRequest,
-            HttpServletRequest request) {
+                                              HttpServletRequest request) {
         if (userUpdateMyRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -317,6 +330,7 @@ public class UserController {
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(true);
     }
+
     /**
      * 添加用户签到记录
      *
@@ -336,7 +350,7 @@ public class UserController {
      *
      * @param year    年份（为空表示当前年份）
      * @param request
-     * @return 返回年份签到的年数字
+     * @return 签到记录映射
      */
     @GetMapping("/get/sign_in")
     public BaseResponse<List<Integer>> getUserSignInRecord(Integer year, HttpServletRequest request) {

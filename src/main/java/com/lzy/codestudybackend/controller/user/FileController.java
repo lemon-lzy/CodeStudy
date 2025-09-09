@@ -1,20 +1,15 @@
 package com.lzy.codestudybackend.controller.user;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileNameUtil;
+
 import com.lzy.codestudybackend.common.BaseResponse;
 import com.lzy.codestudybackend.common.ErrorCode;
 import com.lzy.codestudybackend.common.ResultUtils;
 import com.lzy.codestudybackend.constant.FileConstant;
 import com.lzy.codestudybackend.exception.BusinessException;
 import com.lzy.codestudybackend.manager.CosManager;
-import com.lzy.codestudybackend.model.dto.file.UploadFileRequest;
 import com.lzy.codestudybackend.model.entity.user.User;
-import com.lzy.codestudybackend.model.enums.FileUploadBizEnum;
 import com.lzy.codestudybackend.service.user.UserService;
-import java.io.File;
-import java.util.Arrays;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,11 +18,13 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.util.Arrays;
+
 /**
  * 文件接口
- *
- * @author lzy
- * 
  */
 @RestController
 @RequestMapping("/file")
@@ -44,24 +41,17 @@ public class FileController {
      * 文件上传
      *
      * @param multipartFile
-     * @param uploadFileRequest
      * @param request
      * @return
      */
     @PostMapping("/upload")
-    public BaseResponse<String> uploadFile(@RequestPart("file") MultipartFile multipartFile,
-            UploadFileRequest uploadFileRequest, HttpServletRequest request) {
-        String biz = uploadFileRequest.getBiz();
-        FileUploadBizEnum fileUploadBizEnum = FileUploadBizEnum.getEnumByValue(biz);
-        if (fileUploadBizEnum == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        validFile(multipartFile, fileUploadBizEnum);
+    public BaseResponse<String> uploadFile(@RequestPart("file") MultipartFile multipartFile, HttpServletRequest request) {
+        validFile(multipartFile);
         User loginUser = userService.getLoginUser(request);
         // 文件目录：根据业务、用户来划分
         String uuid = RandomStringUtils.randomAlphanumeric(8);
         String filename = uuid + "-" + multipartFile.getOriginalFilename();
-        String filepath = String.format("/%s/%s/%s", fileUploadBizEnum.getValue(), loginUser.getId(), filename);
+        String filepath = String.format("/%s/%s", loginUser.getId(), filename);
         File file = null;
         try {
             // 上传文件
@@ -88,21 +78,18 @@ public class FileController {
      * 校验文件
      *
      * @param multipartFile
-     * @param fileUploadBizEnum 业务类型
      */
-    private void validFile(MultipartFile multipartFile, FileUploadBizEnum fileUploadBizEnum) {
+    private void validFile(MultipartFile multipartFile) {
         // 文件大小
         long fileSize = multipartFile.getSize();
         // 文件后缀
-        String fileSuffix = FileUtil.getSuffix(multipartFile.getOriginalFilename());
+        String fileSuffix = FileNameUtil.getSuffix(multipartFile.getOriginalFilename());
         final long ONE_M = 1024 * 1024L;
-        if (FileUploadBizEnum.USER_AVATAR.equals(fileUploadBizEnum)) {
-            if (fileSize > ONE_M) {
-                throw new BusinessException(ErrorCode.PARAMS_ERROR, "文件大小不能超过 1M");
-            }
-            if (!Arrays.asList("jpeg", "jpg", "svg", "png", "webp").contains(fileSuffix)) {
-                throw new BusinessException(ErrorCode.PARAMS_ERROR, "文件类型错误");
-            }
+        if (fileSize > 5* ONE_M) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "文件大小不能超过 5M");
+        }
+        if (!Arrays.asList("jpeg", "jpg", "svg", "png", "webp").contains(fileSuffix)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "文件类型错误");
         }
     }
 }

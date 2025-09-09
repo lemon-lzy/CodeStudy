@@ -1,13 +1,12 @@
 package com.lzy.codestudybackend.model.dto.user;
 
-import java.io.Serializable;
 import lombok.Data;
+
+import java.io.Serializable;
 
 /**
  * 用户登录请求
- *
- * @author lzy
- * 
+
  */
 @Data
 public class UserLoginRequest implements Serializable {

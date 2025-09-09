@@ -1,15 +1,14 @@
 package com.lzy.codestudybackend.model.dto.user;
 
 import com.lzy.codestudybackend.common.PageRequest;
-import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
+
 /**
  * 用户查询请求
- *
- * @author lzy
- * 
+
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
