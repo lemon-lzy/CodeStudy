@@ -1,15 +1,20 @@
 package com.lzy.codestudybackend.service.question.impl;
 
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.gson.JsonObject;
 import com.lzy.codestudybackend.common.ErrorCode;
+import com.lzy.codestudybackend.common.MqConstant;
 import com.lzy.codestudybackend.constant.CommonConstant;
+import com.lzy.codestudybackend.controller.mq.RabbitmqProducer;
 import com.lzy.codestudybackend.exception.BusinessException;
 import com.lzy.codestudybackend.judge.JudgeService;
 import com.lzy.codestudybackend.mapper.question.QuestionSubmitMapper;
 import com.lzy.codestudybackend.model.dto.questionSubmit.QuestionSubmitAddRequest;
+import com.lzy.codestudybackend.model.dto.questionSubmit.QuestionSubmitMqAddRequest;
 import com.lzy.codestudybackend.model.dto.questionSubmit.QuestionSubmitQueryRequest;
 import com.lzy.codestudybackend.model.entity.question.QuestionCode;
 import com.lzy.codestudybackend.model.entity.question.QuestionSubmit;
@@ -24,6 +29,7 @@ import com.lzy.codestudybackend.utils.SqlUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -47,9 +53,12 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     @Resource
     private UserService userService;
 
+//    @Resource
+//    @Lazy
+//    private JudgeService judgeService;
+
     @Resource
-    @Lazy
-    private JudgeService judgeService;
+    private RabbitmqProducer rabbitmqProducer;
 
     /**
      * 题目提交
@@ -93,10 +102,13 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "数据插入失败");
         }
         Long questionSubmitId = questionSubmit.getId();
-        CompletableFuture.runAsync(()->{
-            judgeService.doJudge(questionSubmitId,questionSubmitAddRequest);
-        });
-
+//        CompletableFuture.runAsync(()->{
+//            judgeService.doJudge(questionSubmitId,questionSubmitAddRequest);
+//        });
+        QuestionSubmitMqAddRequest questionSubmitMqAddRequest=new QuestionSubmitMqAddRequest();
+        BeanUtils.copyProperties(questionSubmitAddRequest,questionSubmitMqAddRequest);
+        questionSubmitMqAddRequest.setQuestionSubmitId(questionSubmitId);
+        rabbitmqProducer.sendMessage(MqConstant.EXCHANGE_NAME, MqConstant.NORMAL_ROUTING_KEY, JSONUtil.toJsonStr(questionSubmitMqAddRequest));
         return questionSubmitId;
 
     }

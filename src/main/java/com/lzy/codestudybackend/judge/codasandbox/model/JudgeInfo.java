@@ -1,11 +1,13 @@
 package com.lzy.codestudybackend.judge.codasandbox.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 判题信息
  */
 @Data
+@NoArgsConstructor
 public class JudgeInfo {
 
     /**
@@ -22,4 +24,12 @@ public class JudgeInfo {
      * 消耗时间（KB）
      */
     private Long time;
+
+
+    public JudgeInfo(String message,Long memory,Long time)
+    {
+        this.message=message;
+        this.memory=memory;
+        this.time=time;
+    }
 }

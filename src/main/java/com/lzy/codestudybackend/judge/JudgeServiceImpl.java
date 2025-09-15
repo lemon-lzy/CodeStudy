@@ -57,7 +57,7 @@ public class JudgeServiceImpl implements JudgeService {
         QuestionCode questionCode = questionCodeService.getById(questionId);
         ThrowUtils.throwIf(questionId == null,ErrorCode.NOT_FOUND_ERROR, "题目不存在");
 
-        // 2、如果题目提交状态不为等待中，就不用重复执行了
+        // 2、如果题目提交状态不为等待中，就不用重复执行了，如果还在判题的消息，则mq消息直接确认消费，不需要重试
         if (!questionSubmit.getSubmitState().equals(QuestionSubmitStatusEnum.WAITING.getValue())) {
             throw new BusinessException(ErrorCode.OPERATION_ERROR, "题目正在判题中");
         }
@@ -66,6 +66,7 @@ public class JudgeServiceImpl implements JudgeService {
         updateQuestionSubmit.setId(questionSubmitId);
         updateQuestionSubmit.setSubmitState(QuestionSubmitStatusEnum.RUNNING.getValue());
         boolean updateState = questionSubmitService.updateById(updateQuestionSubmit);
+        //更新状态失败，需要重试
         if (!updateState) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "题目状态更新失败");
         }
@@ -106,6 +107,10 @@ public class JudgeServiceImpl implements JudgeService {
         updateQuestionSubmit.setSubmitState(QuestionSubmitStatusEnum.SUCCEED.getValue());
         updateQuestionSubmit.setJudgeInfo(JSONUtil.toJsonStr(judgeInfo));
         updateState = questionSubmitService.updateById(updateQuestionSubmit);
+        //更新状态失败，需要重试
+        if (!updateState) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "题目状态更新失败");
+        }
         //判完题目进行数据增加（通过率）
         System.out.println("test01:"+updateQuestionSubmit);
         //提交数+1
