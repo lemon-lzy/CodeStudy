@@ -48,28 +48,41 @@ public class JudgeServiceImpl implements JudgeService {
 
     @Override
     public QuestionSubmit doJudge(long questionSubmitId, QuestionSubmitAddRequest questionSubmitAddRequest) {
+        System.out.println("开始判题");
         // 1、传入题目的提交 id，获取到对应的题目、提交信息（包含代码、编程语言等）
         QuestionSubmit questionSubmit = questionSubmitService.getById(questionSubmitId);
+        if(questionSubmit==null)
+        {
+            System.out.println("提交信息不存在");
+        }
         ThrowUtils.throwIf(questionSubmit == null, ErrorCode.NOT_FOUND_ERROR, "提交信息不存在");
 
         // 通过提交的信息中的题目id 获取到题目的全部信息
         Long questionId = questionSubmit.getQuestionId();
         QuestionCode questionCode = questionCodeService.getById(questionId);
+        if(questionCode==null)
+        {
+            System.out.println("提交题目不存在");
+        }
         ThrowUtils.throwIf(questionId == null,ErrorCode.NOT_FOUND_ERROR, "题目不存在");
 
         // 2、如果题目提交状态不为等待中，就不用重复执行了，如果还在判题的消息，则mq消息直接确认消费，不需要重试
         if (!questionSubmit.getSubmitState().equals(QuestionSubmitStatusEnum.WAITING.getValue())) {
+            System.out.println("报错：题目正在判题中");
             throw new BusinessException(ErrorCode.OPERATION_ERROR, "题目正在判题中");
         }
         // 3、更改判题（题目提交）的状态为 “判题中”，防止重复执行，也能让用户即时看到状态
+        System.out.println("开始更新题目状态为判题中");
         QuestionSubmit updateQuestionSubmit = new QuestionSubmit();
         updateQuestionSubmit.setId(questionSubmitId);
         updateQuestionSubmit.setSubmitState(QuestionSubmitStatusEnum.RUNNING.getValue());
         boolean updateState = questionSubmitService.updateById(updateQuestionSubmit);
         //更新状态失败，需要重试
         if (!updateState) {
+            System.out.println("题目状态更新失败");
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "题目状态更新失败");
         }
+        System.out.println("执行ai代码沙箱，拿到结果");
         //4、调用沙箱，获取到执行结果
         CodeSandbox codeSandbox = CodeSandboxFactory.newInstance(judgeType);
         codeSandbox = new CodeSandBoxProxy(codeSandbox);
@@ -91,6 +104,7 @@ public class JudgeServiceImpl implements JudgeService {
                 .build();
         ExecuteCodeResponse executeCodeResponse = codeSandbox.executeCode(executeCodeRequest);
         List<String> outputList = executeCodeResponse.getOutputList();
+        System.out.println("根据代码沙箱的执行结果，设置题目的判题状态和信息");
         // 5、根据沙箱的执行结果，设置题目的判题状态和信息
         JudgeContext judgeContext = new JudgeContext();
         judgeContext.setJudgeInfo(executeCodeResponse.getJudgeInfo());
@@ -101,6 +115,7 @@ public class JudgeServiceImpl implements JudgeService {
         judgeContext.setQuestionSubmit(questionSubmit);
         // 进入到代码沙箱，执行程序，返回执行结果
         JudgeInfo judgeInfo = judgeManager.doJudge(judgeContext);
+        System.out.println("修改判题结果");
         // 6、修改判题结果
         updateQuestionSubmit = new QuestionSubmit();
         updateQuestionSubmit.setId(questionSubmitId);
@@ -109,11 +124,13 @@ public class JudgeServiceImpl implements JudgeService {
         updateState = questionSubmitService.updateById(updateQuestionSubmit);
         //更新状态失败，需要重试
         if (!updateState) {
+            System.out.println("题目判题状态更新失败");
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "题目状态更新失败");
         }
         //判完题目进行数据增加（通过率）
         System.out.println("test01:"+updateQuestionSubmit);
         //提交数+1
+        System.out.println("增加提交数");
         // todo 1 增加一个判断
         if (questionCode.getSubmitNum() == null ){
             questionCode.setSubmitNum(1);
@@ -143,7 +160,7 @@ public class JudgeServiceImpl implements JudgeService {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "题目状态更新失败");
         }
         // 再次查询数据库，返回最新提交信息
-        QuestionSubmit questionSubmitResult = questionSubmitService.getById(questionId);
+        QuestionSubmit questionSubmitResult = questionSubmitService.getById(questionSubmitId);
         return questionSubmitResult;
     }
 }
