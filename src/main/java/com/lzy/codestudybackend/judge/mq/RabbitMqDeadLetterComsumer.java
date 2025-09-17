@@ -1,8 +1,10 @@
 package com.lzy.codestudybackend.judge.mq;
 
+import cn.hutool.json.JSONUtil;
 import com.lzy.codestudybackend.common.ErrorCode;
 import com.lzy.codestudybackend.common.MqConstant;
 import com.lzy.codestudybackend.exception.BusinessException;
+import com.lzy.codestudybackend.model.dto.questionSubmit.QuestionSubmitMqAddRequest;
 import com.lzy.codestudybackend.model.entity.question.QuestionSubmit;
 import com.lzy.codestudybackend.model.enums.QuestionSubmitStatusEnum;
 import com.lzy.codestudybackend.service.question.QuestionSubmitService;
@@ -48,7 +50,8 @@ public class RabbitMqDeadLetterComsumer {
             channel.basicNack(deliveryTag, false, false);
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "消息为空");
         }
-        long questionSubmitId = Long.parseLong(message);
+        QuestionSubmitMqAddRequest questionSubmitMqAddRequest= JSONUtil.toBean(message, QuestionSubmitMqAddRequest.class);
+        long questionSubmitId =questionSubmitMqAddRequest.getQuestionSubmitId();
         QuestionSubmit questionSubmit = questionSubmitService.getById(questionSubmitId);
         if (questionSubmit == null) {
             channel.basicNack(deliveryTag, false, false);

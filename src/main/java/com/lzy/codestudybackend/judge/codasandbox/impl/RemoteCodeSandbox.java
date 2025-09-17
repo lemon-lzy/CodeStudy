@@ -2,6 +2,7 @@ package com.lzy.codestudybackend.judge.codasandbox.impl;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.excel.util.StringUtils;
+import com.lzy.codestudybackend.constant.AuthConstant;
 import com.lzy.codestudybackend.exception.BusinessException;
 import com.lzy.codestudybackend.judge.codasandbox.CodeSandbox;
 import com.lzy.codestudybackend.judge.codasandbox.model.ExecuteCodeRequest;
@@ -13,19 +14,16 @@ import com.lzy.codestudybackend.common.ErrorCode;
  */
 public class RemoteCodeSandbox implements CodeSandbox {
 
-    // 定义鉴权请求头和密钥
-    private static final String AUTH_REQUEST_HEADER = "auth";
 
-    private static final String AUTH_REQUEST_SECRET = "secretKey";
 
 
     @Override
     public ExecuteCodeResponse executeCode(ExecuteCodeRequest executeCodeRequest) {
         System.out.println("远程代码沙箱");
-        String url = "http://localhost:8090/executeCode";
+        String url = "http://192.168.150.105:8123/executeCode";
         String json = JSONUtil.toJsonStr(executeCodeRequest);
         String responseStr = HttpUtil.createPost(url)
-                .header(AUTH_REQUEST_HEADER, AUTH_REQUEST_SECRET)
+                .header(AuthConstant.AUTHREQUESTHEADER, AuthConstant.AUTHREQUESTSECRET)
                 .body(json)
                 .execute()
                 .body();

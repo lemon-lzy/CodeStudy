@@ -9,6 +9,13 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  #rabbitmq配置
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
   # session 配置
   session:
     # todo 取消注释开启分布式 session（须先配置 Redis）
@@ -112,4 +119,4 @@ ai:
 
 #代码沙箱配置
 codesandbox:
-  type: ai
+  type: remote

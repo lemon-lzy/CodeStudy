@@ -1,0 +1,9 @@
+{
+  "code": "#include <stdio.h>\nint main() {\n    int a, b;\n    scanf(\"%d %d\", &a, &b);\n    printf(\"%d\", a + b);\n    return 0;\n}",
+  "inputList": [
+    "1 2",
+    "3 4",
+    "10 20"
+  ],
+  "language": "c"
+}

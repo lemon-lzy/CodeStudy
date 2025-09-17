@@ -1,0 +1,9 @@
+{
+  "code": "import sys\n\ndef main():\n    # 从两行分别读取两个数字（适配工具类的输入处理）\n    a = int(sys.stdin.readline())\n    b = int(sys.stdin.readline())\n    result = a + b\n    print(result)\n\nif __name__ == \"__main__\":\n    main()",
+  "inputList": [
+    "1 2",
+    "3 4",
+    "10 20"
+  ],
+  "language": "python3"
+}

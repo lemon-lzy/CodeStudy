@@ -1,6 +1,5 @@
 package com.lzy.codestudybackend.judge.codasandbox.model;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,14 +7,15 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-
+/**
+ * @author 15712
+ * 判题的响应
+ */
 @Data
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ExecuteCodeResponse {
-
-    private List<String> outputList;
 
     /**
      * 接口信息
@@ -23,12 +23,19 @@ public class ExecuteCodeResponse {
     private String message;
 
     /**
-     * 执行状态
+     * 判题状态
      */
     private Integer status;
 
     /**
-     * 判题信息
+     * 判题配置
+     */
+    private List<String> outputList;
+
+
+    /**
+     * 返回判题信息
      */
     private JudgeInfo judgeInfo;
+
 }

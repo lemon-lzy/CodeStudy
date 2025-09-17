@@ -1,0 +1,9 @@
+{
+  "code": "import java.util.Scanner;\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int a = scanner.nextInt();\n        int b = scanner.nextInt();\n        System.out.println(a + b);\n    }\n}",
+  "inputList": [
+    "1 2",
+    "3 4",
+    "10 20"
+  ],
+  "language": "java"
+}

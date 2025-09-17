@@ -34,10 +34,10 @@ public class ProcessUtils
             StopWatch stopWatch = new StopWatch();
             stopWatch.start();
             // 等待程序执行，获取错误码
-            int exitValue = runProcess.waitFor();
-            executeMessage.setExitValue(exitValue);
+            int exitCode = runProcess.waitFor();
+            executeMessage.setExitCode(exitCode);
             // 正常退出
-            if (exitValue == 0)
+            if (exitCode == 0)
             {
                 System.out.println(opName + "成功");
                 // 分批获取进程的正常输出
@@ -53,7 +53,7 @@ public class ProcessUtils
             } else
             {
                 // 异常退出
-                System.out.println(opName + "失败，错误码： " + exitValue);
+                System.out.println(opName + "失败，错误码： " + exitCode);
                 // 分批获取进程的正常输出
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(runProcess.getInputStream()));
                 List<String> outputStrList = new ArrayList<>();

@@ -3,26 +3,32 @@ package com.lzy.codestudybackend.judge.codasandbox.model;
 import lombok.Data;
 
 /**
- * 进程执行信息
- *
- * @author zzx
+ * @author 15712
+ * 编译信息
  */
 @Data
-public class ExecuteMessage
-{
-
+public class ExecuteMessage {
     /**
-     * 执行结果
-     * 0-正常
-     * 1（非零）-异常
+     * 退出码
      */
-    private Integer exitValue;
-
-    private String message;
-
+    private Integer exitCode;
+    /**
+     * 错误信息
+     */
     private String errorMessage;
 
-    private Long time;
+    /**
+     * 正常输出信息
+     */
+    private String message;
 
+    /**
+     * 执行内存
+     */
     private Long memory;
+
+    /**
+     * 程序执行时间
+     */
+    private Long time;
 }

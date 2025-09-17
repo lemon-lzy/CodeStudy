@@ -23,10 +23,10 @@ public class PageRequest {
     /**
      * 排序字段
      */
-    private String sortField;
+    private String sortField = "createTime" ;
 
     /**
-     * 排序顺序（默认升序）
+     * 排序顺序（默认降序）
      */
-    private String sortOrder = CommonConstant.SORT_ORDER_ASC;
+    private String sortOrder = CommonConstant.SORT_ORDER_DESC;
 }

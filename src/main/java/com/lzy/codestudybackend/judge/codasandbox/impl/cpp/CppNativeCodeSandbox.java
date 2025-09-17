@@ -1,4 +1,5 @@
-package com.lzy.codestudybackend.judge.codasandbox.impl.java;
+package com.lzy.codestudybackend.judge.codasandbox.impl.cpp;
+
 import com.lzy.codestudybackend.judge.codasandbox.model.ExecuteCodeRequest;
 import com.lzy.codestudybackend.judge.codasandbox.model.ExecuteCodeResponse;
 import org.springframework.stereotype.Component;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @author 15712
  */
 @Component
-public class JavaNativeCodeSandbox extends JavaCodeSandBoxTemplate {
+public class CppNativeCodeSandbox extends CppCodeSandboxTemplate {
 
     /**
      * 执行代码
