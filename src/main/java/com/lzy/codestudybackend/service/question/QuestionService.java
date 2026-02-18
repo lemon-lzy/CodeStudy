@@ -8,6 +8,7 @@ import com.lzy.codestudybackend.model.entity.question.Question;
 import com.lzy.codestudybackend.model.vo.QuestionVO;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 题目服务
@@ -66,4 +67,6 @@ public interface QuestionService extends IService<Question> {
      * @return
      */
     Page<Question> searchFromEs(QuestionQueryRequest questionQueryRequest);
+
+    public List<QuestionVO> getQuestionVOList(List<Question> questionList, Boolean containUsers);
 }

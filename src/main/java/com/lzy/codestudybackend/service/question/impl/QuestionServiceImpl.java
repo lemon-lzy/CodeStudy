@@ -320,5 +320,31 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         return page;
     }
 
+    @Override
+    public List<QuestionVO> getQuestionVOList(List<Question> questionList, Boolean containUsers)
+    {
+        // todo 关联查询用户信息，后续可将此处写入简历：避免循环中调用sql语句
+        // 1. 关联查询用户信息
+        Set<Long> userIdSet = questionList.stream().map(Question::getUserId).collect(Collectors.toSet());
+        Map<Long, List<User>> userIdUserListMap = userService.listByIds(userIdSet).stream().collect(Collectors.groupingBy(User::getId));
+        // 填充信息
+        List<QuestionVO> questionVOList = questionList.stream().map(question ->
+        {
+            QuestionVO questionVO = QuestionVO.objToVo(question);
+            if (containUsers)
+            {
+                Long userId = question.getUserId();
+                User user = null;
+                if (userIdUserListMap.containsKey(userId))
+                {
+                    user = userIdUserListMap.get(userId).get(0);
+                }
+                questionVO.setUser(userService.getUserVO(user));
+            }
+            return questionVO;
+        }).collect(Collectors.toList());
+
+        return questionVOList;
+    }
 
 }
