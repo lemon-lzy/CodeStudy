@@ -1,33 +1,34 @@
-# 公共配置文件（无任何敏感信息，可安全提交到仓库）
+# 公共配置文件
 spring:
   application:
     name: code-study-backend
-  # 默认激活 dev 环境（会自动加载 application-dev.yml 配置，本地开发生效）
+  # 默认 dev 环境
   profiles:
     active: dev
   # 支持 swagger3
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-  # rabbitmq 通用配置（本地默认配置，无敏感信息）
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
-    virtual-host: /
-  # session 通用配置
+  # session 配置
   session:
+    # todo 取消注释开启分布式 session（须先配置 Redis）
     store-type: redis
+    # 30 天过期
     timeout: 2592000
-  # 数据库公共配置（仅保留驱动，真实配置在 application-dev.yml 中）
+  # 数据库配置
+  # todo 需替换配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-  # Redis 通用配置（无敏感信息）
+    url: jdbc:mysql://localhost:3306/code_study?serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=True
+    username: root
+    password: 293928
+  # Redis 配置
+  # Redis 配置
   redis:
     database: 2
     host: 127.0.0.1
     port: 6379
+    #    password:   # Redis 密码，如果有的话
     timeout: 5000
     lettuce:
       pool:
@@ -36,15 +37,23 @@ spring:
         min-idle: 2
         max-wait: 1000
       shutdown-timeout: 100ms
-  # 文件上传通用配置
+  # Elasticsearch 配置
+  # todo 需替换配置，然后取消注释
+  elasticsearch:
+    connection-timeout: 5000
+    uris: localhost:9200
+    socket-timeout: 60000
+  # 文件上传
   servlet:
     multipart:
+      # 大小限制
       max-file-size: 10MB
 server:
   address: 0.0.0.0
   port: 8101
   servlet:
     context-path: /api
+    # cookie 30 天过期
     session:
       cookie:
         max-age: 2592000
@@ -54,16 +63,18 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:
-      logic-delete-field: isDelete
-      logic-delete-value: 1
-      logic-not-delete-value: 0
-# 微信相关（仅保留结构，真实配置在 application-dev.yml 中）
+      logic-delete-field: isDelete # 全局逻辑删除的实体字段名
+      logic-delete-value: 1 # 逻辑已删除值（默认为 1）
+      logic-not-delete-value: 0 # 逻辑未删除值（默认为 0）
+# 微信相关
 wx:
+  # 微信公众平台
+  # todo 需替换配置
   mp:
-    token: placeholder # 占位符
-    aesKey: placeholder
-    appId: placeholder
-    secret: placeholder
+    token: xxx
+    aesKey: xxx
+    appId: xxx
+    secret: xxx
     config-storage:
       http-client-type: HttpClient
       key-prefix: wx
@@ -71,17 +82,20 @@ wx:
         host: 127.0.0.1
         port: 6379
       type: Memory
+  # 微信开放平台
+  # todo 需替换配置
   open:
-    appId: placeholder
-    appSecret: placeholder
-# 对象存储（仅保留结构，真实配置在 application-dev.yml 中）
+    appId: xxx
+    appSecret: xxx
+# 对象存储
+# todo 需替换配置
 cos:
   client:
-    accessKey: placeholder
-    secretKey: placeholder
-    region: placeholder
-    bucket: placeholder
-# 接口文档配置（通用配置，可提交）
+    accessKey: AKIDnRr43owwkS3QYS8bppb9TYP2RcfaIo7B
+    secretKey: sXzDD0Zu0we8OQEpBi5HFzVnrndJuRmt
+    region: ap-guangzhou
+    bucket: lzy-1343059489
+# 接口文档配置
 knife4j:
   enable: true
   openapi:
@@ -92,9 +106,10 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - com.lzy.codestudybackend.controller
-# AI 大模型接入（仅保留结构，真实配置在 application-dev.yml 中）
+# AI 大模型接入（目前是火山引擎 DeepSeek）
 ai:
-  apiKey: placeholder # 占位符
-# 代码沙箱配置（仅保留结构，真实配置在 application-dev.yml 中）
+  apiKey: 3d084198-12f2-4e46-89c6-cccc048095f7
+
+#代码沙箱配置
 codesandbox:
-  type: placeholder # 占位符
+  type: ai
