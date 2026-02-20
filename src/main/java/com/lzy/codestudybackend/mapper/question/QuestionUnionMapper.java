@@ -10,7 +10,7 @@ import java.util.List;
 
 
 /**
- * @author ZZX
+ * @author lzy
  * @description 针对表【question_union】的数据库操作Mapper
  * @createDate 2023-11-15 14:36:50
  * @Entity sspu.zzx.sspuoj.model.QuestionUnion

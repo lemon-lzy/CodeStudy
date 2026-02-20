@@ -16,7 +16,7 @@ import java.util.UUID;
  * 代码沙箱一些通用方法
  *
  * @version 1.0
- * @Author ZZX
+ * @Author lzy
  * @Date 2024/1/19 14:09
  */
 public class CommonCodeSandboxTemplate

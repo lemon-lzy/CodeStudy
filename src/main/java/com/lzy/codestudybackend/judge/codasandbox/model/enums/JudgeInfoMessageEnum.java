@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 /**
  * 判题信息消息枚举
  *
- * @author ZZX
+ * @author lzy
  * @from SSPU
  */
 public enum JudgeInfoMessageEnum {

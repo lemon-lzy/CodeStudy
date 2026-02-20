@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * @author ZZX
+ * @author lzy
  */
 @Data
 public class QuestionListAddRequest implements Serializable

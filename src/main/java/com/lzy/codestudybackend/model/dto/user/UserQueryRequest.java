@@ -43,5 +43,16 @@ public class UserQueryRequest extends PageRequest implements Serializable {
      */
     private String userRole;
 
+    /**
+     *  用户邮箱
+     */
+    private String userEmail;
+
+
+    /**
+     * 用户类型：user/admin
+     */
+    private String userType;
+
     private static final long serialVersionUID = 1L;
 }

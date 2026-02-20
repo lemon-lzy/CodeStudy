@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 /**
  * 题目提交枚举
  *
- * @author ZZX
+ * @author lzy
  * @from SSPU
  */
 public enum QuestionSubmitStatusEnum {

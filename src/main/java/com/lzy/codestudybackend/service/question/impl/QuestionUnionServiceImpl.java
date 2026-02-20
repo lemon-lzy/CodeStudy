@@ -7,7 +7,7 @@ import com.lzy.codestudybackend.service.question.QuestionUnionService;
 import org.springframework.stereotype.Service;
 
 /**
-* @author ZZX
+* @author lzy
 * @description 针对表【question_union】的数据库操作Service实现
 * @createDate 2023-11-15 14:36:50
 */
