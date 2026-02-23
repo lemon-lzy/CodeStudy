@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sspu.zzx.sspuoj.mapper.OrganizationMapper">
+
+    <resultMap id="BaseResultMap" type="sspu.zzx.sspuoj.model.entity.Organization">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="organName" column="organName" jdbcType="VARCHAR"/>
+        <result property="organAvatar" column="organAvatar" jdbcType="VARCHAR"/>
+        <result property="organProfile" column="organProfile" jdbcType="VARCHAR"/>
+        <result property="organNotice" column="organNotice" jdbcType="VARCHAR"/>
+        <result property="organizerName" column="organizerName" jdbcType="VARCHAR"/>
+        <result property="organCurrentNum" column="organCurrentNum" jdbcType="INTEGER"/>
+        <result property="organTotalNum" column="organTotalNum" jdbcType="INTEGER"/>
+        <result property="organizerId" column="organizerId" jdbcType="BIGINT"/>
+        <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+        <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,organName,organAvatar,organizerName,organNotice,
+        organProfile,organCurrentNum,organTotalNum,
+        organizerId,createTime,updateTime,
+        isDelete
+    </sql>
+</mapper>

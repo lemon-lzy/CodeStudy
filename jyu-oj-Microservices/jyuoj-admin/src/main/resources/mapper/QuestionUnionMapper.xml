@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sspu.zzx.sspuoj.mapper.QuestionUnionMapper">
+
+    <resultMap id="BaseResultMap" type="sspu.zzx.sspuoj.model.entity.QuestionUnion">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="questionId" column="questionId" jdbcType="BIGINT"/>
+        <result property="listId" column="listId" jdbcType="BIGINT"/>
+        <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+        <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,questionId,listId,createTime,
+        updateTime,isDelete
+    </sql>
+    <select id="getQuestionCountByListIds"
+            resultType="sspu.zzx.sspuoj.model.dto.questionlist.QuestionListIdToCount">
+        SELECT listId as "listId", COUNT(DISTINCT questionId) AS questionCount
+        FROM question_union
+        WHERE listId IN
+        <foreach collection="listIds" item="lId" open="(" separator="," close=")">
+            #{lId}
+        </foreach>
+        GROUP BY listId
+    </select>
+
+    <select id="getQuestionsById" resultType="sspu.zzx.sspuoj.model.entity.Question">
+        select t1.*
+        from question as t1
+                 inner join
+             (
+                 select questionId
+                 from question_union
+                 where listId = #{questionListId}
+             ) as t2
+             on t1.id = t2.questionId
+    </select>
+
+
+</mapper>

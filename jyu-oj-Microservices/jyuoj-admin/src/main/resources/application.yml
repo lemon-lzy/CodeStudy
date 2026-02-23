@@ -1,0 +1,126 @@
+# 公共配置文件
+spring:
+  application:
+    name: SSPU-OJ
+  # 默认 dev 环境
+  profiles:
+    active: druid,dev
+  # 文件上传
+  servlet:
+    multipart:
+      # 启动开关
+      enabled: true
+      # 文件大小限制
+      max-file-size: 50MB
+      # 限制整个请求的大小，包括所有文件和其他部分
+      max-request-size: 100MB
+
+  banner:
+    location: static/banner.txt
+  # 支持 swagger3
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  # 配置时间返回格式
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  # Quartz 的配置，对应 QuartzProperties 配置类
+  quartz:
+    job-store-type: memory # Job 存储器类型。默认为 memory 表示内存，可选 jdbc 使用数据库。
+    auto-startup: true # Quartz 是否自动启动
+    startup-delay: 0 # 延迟 N 秒启动
+    wait-for-jobs-to-complete-on-shutdown: true # 应用关闭时，是否等待定时任务执行完成。默认为 false ，建议设置为 true
+    overwrite-existing-jobs: false # 是否覆盖已有 Job 的配置
+    properties: # 添加 Quartz Scheduler 附加属性
+      org:
+        quartz:
+          threadPool:
+            threadCount: 25 # 线程池大小。默认为 10 。
+            threadPriority: 5 # 线程优先级
+            class: org.quartz.simpl.SimpleThreadPool # 线程池类型
+
+  # todo 邮箱基本配置
+  mail:
+    #配置smtp服务主机地址
+    # qq邮箱为smtp.qq.com          端口号465或587
+    # sina    smtp.sina.cn
+    # aliyun  smtp.aliyun.com
+    # 163     smtp.163.com       端口号465或994
+    host: smtp.163.com
+    #发送者邮箱
+    username: 15975117099@163.com
+    #配置密码,注意不是真正的密码，而是刚刚申请到的授权码
+    password: LXggLzAyVqwjDF4K
+    #端口号465或587
+    # 163 邮箱相关服务器信息如下，
+    # 服务器名称	服务器地址	SSL 协议端口	非 SSL 协议端口
+    # SMTP	smtp.163.com	465/994	    25
+    port: 25
+    #默认的邮件编码为UTF-8
+    default-encoding: UTF-8
+    #其他参数
+    properties:
+      mail:
+        #配置SSL 加密工厂
+        smtp:
+          ssl:
+            #本地测试，先放开ssl，部署时用true
+            enable: false
+            required: false
+          #开启debug模式，这样邮件发送过程的日志会在控制台打印出来，方便排查错误
+        debug: false
+
+# todo 更换为自己搭建的minio服务
+minio:
+  # 这个一定要写API的访问地址，而不是控制台的，否则会报错！！！
+  endpoint:  http://127.0.0.1:9006
+  accessKey: 4NMtscJwU5r0ZiY7QwIS
+  secretKey: xKS7neodh5KxsNg9BFaoxrVPREZI3Yb3jtZvBQwA
+  bucketName: ai-oj
+
+# todo 第三方API配置
+third-api:
+  # 评论审核
+  comment:
+    url: http://localhost:5000/comment/moderation
+    # 可选择3中模式：fast、accurate、strict
+    mode: fast
+
+mybatis-plus:
+  #实体扫描，多个package用逗号或者分号分隔
+  type-aliases-package: sspu.zzx.sspuoj.model.entity
+  configuration:
+    #数据库大写下划线转换
+    map-underscore-to-camel-case: false
+    #开启sql日志
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    cache-enabled: false
+  global-config:
+    db-config:
+      logic-delete-field: isDelete # 全局逻辑删除的实体字段名
+      logic-delete-value: 1 # 逻辑已删除值（默认为 1）
+      logic-not-delete-value: 0 # 逻辑未删除值（默认为 0）
+    # 启动时logo显示开关
+    banner: off
+
+############## Sa-Token 配置 (文档: https://sa-token.cc) ##############
+sa-token:
+  # token 名称（同时也是 cookie 名称）
+  token-name: sa-token
+  # token 有效期（单位：秒） 默认30天，-1 代表永久有效
+  timeout: 2592000
+  # token 最低活跃频率（单位：秒），如果 token 超过此时间没有访问系统就会被冻结，默认-1 代表不限制，永不冻结
+  active-timeout: -1
+  # 是否允许同一账号多地同时登录 （为 true 时允许一起登录, 为 false 时新登录挤掉旧登录）
+  is-concurrent: false
+  # 在多人登录同一账号时，是否共用一个 token （为 true 时所有登录共用一个 token, 为 false 时每次登录新建一个 token）
+  is-share: true
+  # token 风格（默认可取值：uuid、simple-uuid、random-32、random-64、random-128、tik）
+  token-style: uuid
+  # 是否输出操作日志
+  is-log: true
+
+# swagger可视化页面url
+swagger-home:
+  url: http://localhost:9101/api/doc.html#/home

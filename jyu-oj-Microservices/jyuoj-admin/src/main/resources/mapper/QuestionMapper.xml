@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sspu.zzx.sspuoj.mapper.QuestionMapper">
+
+    <resultMap id="BaseResultMap" type="sspu.zzx.sspuoj.model.entity.Question">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="tags" column="tags" jdbcType="VARCHAR"/>
+        <result property="answer" column="answer" jdbcType="VARCHAR"/>
+        <result property="answerTemplate" column="answerTemplate" jdbcType="VARCHAR"/>
+        <result property="submitNum" column="submitNum" jdbcType="INTEGER"/>
+        <result property="acceptedNum" column="acceptedNum" jdbcType="INTEGER"/>
+        <result property="judgeCase" column="judgeCase" jdbcType="VARCHAR"/>
+        <result property="judgeConfig" column="judgeConfig" jdbcType="VARCHAR"/>
+        <result property="questionType" column="questionType" jdbcType="VARCHAR"/>
+        <result property="questionDifficulty" column="questionDifficulty" jdbcType="VARCHAR"/>
+        <result property="isPrivate" column="isPrivate" jdbcType="TINYINT"/>
+        <result property="userId" column="userId" jdbcType="BIGINT"/>
+        <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+        <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,title,content,
+        tags,answer,answerTemplate,submitNum,
+        acceptedNum,judgeCase,judgeConfig,
+        questionType,isPrivate,userId,questionDifficulty,
+        createTime,updateTime,isDelete
+    </sql>
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sspu.zzx.sspuoj.mapper.UserRoleMapper">
+
+    <resultMap id="BaseResultMap" type="sspu.zzx.sspuoj.model.entity.UserRole">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="roleRight" column="roleRight" jdbcType="VARCHAR"/>
+            <result property="userId" column="userId" jdbcType="BIGINT"/>
+            <result property="deptId" column="deptId" jdbcType="BIGINT"/>
+            <result property="deptType" column="deptType" jdbcType="VARCHAR"/>
+            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+            <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,roleRight,userId,
+        deptId,deptType,createTime,
+        updateTime,isDelete
+    </sql>
+</mapper>

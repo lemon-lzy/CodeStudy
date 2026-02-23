@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sspu.zzx.sspuoj.mapper.FeedbackMapper">
+
+    <resultMap id="BaseResultMap" type="sspu.zzx.sspuoj.model.entity.Feedback">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="applierId" column="applierId" jdbcType="BIGINT"/>
+        <result property="applierContext" column="applierContext" jdbcType="VARCHAR"/>
+        <result property="handlerId" column="handlerId" jdbcType="BIGINT"/>
+        <result property="handleState" column="handleState" jdbcType="VARCHAR"/>
+        <result property="applierName" column="applierName" jdbcType="VARCHAR"/>
+        <result property="handlerName" column="handlerName" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="VARCHAR"/>
+        <result property="handleResult" column="handleResult" jdbcType="VARCHAR"/>
+        <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+        <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,applierId,applierContext,applierName,handlerName,
+        handlerId,handleState,handleResult,
+        createTime,updateTime,isDelete
+    </sql>
+</mapper>

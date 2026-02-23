@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sspu.zzx.sspuoj.mapper.GameMapper">
+
+    <resultMap id="BaseResultMap" type="sspu.zzx.sspuoj.model.entity.Game">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="gameName" column="gameName" jdbcType="VARCHAR"/>
+        <result property="gameAvatar" column="gameAvatar" jdbcType="VARCHAR"/>
+        <result property="gameProfile" column="gameProfile" jdbcType="VARCHAR"/>
+        <result property="gameCurrentNum" column="gameCurrentNum" jdbcType="INTEGER"/>
+        <result property="gameTotalNum" column="gameTotalNum" jdbcType="INTEGER"/>
+        <result property="gameFounderId" column="gameFounderId" jdbcType="BIGINT"/>
+        <result property="gameFounderName" column="gameFounderName" jdbcType="VARCHAR"/>
+        <result property="gameType" column="gameType" jdbcType="VARCHAR"/>
+        <result property="publicZone" column="publicZone" jdbcType="VARCHAR"/>
+        <result property="startTime" column="startTime" jdbcType="DATE"/>
+        <result property="endTime" column="endTime" jdbcType="DATE"/>
+        <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+        <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,gameName,gameAvatar,
+        gameProfile,gameCurrentNum,gameTotalNum,publicZone,gameType,
+        gameFounderId,gameFounderName,startTime,endTime,
+        createTime,updateTime,isDelete
+    </sql>
+</mapper>

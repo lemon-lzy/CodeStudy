@@ -1,0 +1,45 @@
+# 开发配置文件
+spring:
+  # session 配置
+  session:
+    # todo 取消注释开启分布式 session（须先配置 Redis）
+     store-type: redis
+    # 30 天过期
+     timeout: 2592000
+
+  # redis配置
+  redis:
+    # Redis数据库索引（默认为0）
+    database: 1
+    # Redis服务器地址
+    host: 127.0.0.1
+    # Redis服务器连接端口
+    port: 6379
+    # Redis服务器连接密码（默认为空）
+    # password:
+    # 连接超时时间
+    timeout: 10s
+    lettuce:
+      pool:
+        # 连接池最大连接数
+        max-active: 200
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1ms
+        # 连接池中的最大空闲连接
+        max-idle: 10
+        # 连接池中的最小空闲连接
+        min-idle: 0
+
+server:
+  address: 0.0.0.0
+  port: 9101
+  servlet:
+    context-path: /api
+    # cookie 30 天过期
+    session:
+      cookie:
+        max-age: 2592000
+
+# 代码沙箱配置（example、remote、thirdParty）
+codesandbox:
+  type: remote

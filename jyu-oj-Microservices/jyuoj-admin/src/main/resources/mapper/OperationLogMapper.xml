@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sspu.zzx.sspuoj.mapper.OperationLogMapper">
+
+    <resultMap id="BaseResultMap" type="sspu.zzx.sspuoj.model.entity.OperationLog">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="tName" column="tName" jdbcType="VARCHAR"/>
+        <result property="operatorId" column="operatorId" jdbcType="BIGINT"/>
+        <result property="operatorIp" column="operatorIp" jdbcType="VARCHAR"/>
+        <result property="operatorOs" column="operatorOs" jdbcType="VARCHAR"/>
+        <result property="operatorClient" column="operatorClient" jdbcType="VARCHAR"/>
+        <result property="operatorBrowser" column="operatorBrowser" jdbcType="VARCHAR"/>
+        <result property="operatorToken" column="operatorToken" jdbcType="VARCHAR"/>
+        <result property="operationName" column="operationName" jdbcType="VARCHAR"/>
+        <result property="operationMethod" column="operationMethod" jdbcType="VARCHAR"/>
+        <result property="operationParams" column="operationParams" jdbcType="VARCHAR"/>
+        <result property="operationResult" column="operationResult" jdbcType="VARCHAR"/>
+        <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+        <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,tName,
+        operatorId,operatorIp,
+        operatorOs,operatorClient,
+        operatorBrowser,operatorToken,
+        operationName,operationMethod,operationParams,
+        operationResult,createTime,updateTime,
+        isDelete
+    </sql>
+
+    <select id="getOnlineUserList" resultType="sspu.zzx.sspuoj.model.entity.OperationLog">
+        SELECT o.*
+        FROM `operation_log` o
+        JOIN (
+        SELECT operatorId,
+        MAX(createTime) AS maxCreateTime
+        FROM `operation_log`
+        WHERE tName = 'user'
+        AND operationName = '用户登录'
+        AND operatorId IN
+        <foreach collection="loginList" item="loginId" open="(" separator="," close=")">
+            #{loginId}
+        </foreach>
+        GROUP BY operatorId
+        ) m ON o.operatorId = m.operatorId AND o.createTime = m.maxCreateTime;
+    </select>
+</mapper>
