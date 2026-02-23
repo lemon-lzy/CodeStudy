@@ -7,7 +7,7 @@ import com.lzy.codestudybackend.service.game.GameQuestionService;
 import org.springframework.stereotype.Service;
 
 /**
-* @author ZZX
+* @author lzy
 * @description 针对表【game_question】的数据库操作Service实现
 * @createDate 2024-01-10 09:53:00
 */

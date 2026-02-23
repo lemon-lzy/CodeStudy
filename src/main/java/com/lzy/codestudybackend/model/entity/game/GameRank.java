@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @author ZZX
+ * @author lzy
  * @TableName game_rank
  */
 @TableName(value = "game_rank")

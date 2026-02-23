@@ -13,7 +13,7 @@ import java.util.List;
  * @author lzy
  * @description 针对表【question_union】的数据库操作Mapper
  * @createDate 2023-11-15 14:36:50
- * @Entity sspu.zzx.sspuoj.model.QuestionUnion
+ * @Entity com.lzy.jyuoj.model.QuestionUnion
  */
 @Mapper
 public interface QuestionUnionMapper extends BaseMapper<QuestionUnion>

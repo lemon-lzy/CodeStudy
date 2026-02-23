@@ -5,7 +5,7 @@ import com.lzy.codestudybackend.model.entity.game.GameRank;
 
 
 /**
-* @author ZZX
+* @author lzy
 * @description 针对表【game_rank】的数据库操作Service
 * @createDate 2023-11-15 14:36:20
 */
