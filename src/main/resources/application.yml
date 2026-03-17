@@ -91,10 +91,10 @@ wx:
 # todo 需替换配置
 cos:
   client:
-    accessKey: AKIDnRr43owwkS3QYS8bppb9TYP2RcfaIo7B
-    secretKey: sXzDD0Zu0we8OQEpBi5HFzVnrndJuRmt
-    region: ap-guangzhou
-    bucket: lzy-1343059489
+    accessKey: 
+    secretKey: 
+    region: 
+    bucket: 
 # 接口文档配置
 knife4j:
   enable: true
@@ -108,7 +108,7 @@ knife4j:
           - com.lzy.codestudybackend.controller
 # AI 大模型接入（目前是火山引擎 DeepSeek）
 ai:
-  apiKey: 3d084198-12f2-4e46-89c6-cccc048095f7
+  apiKey: 
 
 #代码沙箱配置
 codesandbox:
